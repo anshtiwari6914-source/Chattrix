@@ -9,14 +9,35 @@ const remoteVideo = document.getElementById("remoteVideo");
 const chatWindow = document.getElementById("chatWindow");
 const chatMsg = document.getElementById("chatMsg");
 const sendBtn = document.getElementById("sendBtn");
+const toggleCamBtn = document.getElementById("toggleCamBtn");
+const toggleMicBtn = document.getElementById("toggleMicBtn");
+const onlineCount = document.getElementById("onlineCount");
+
 
 let localStream;
 let pc; // RTCPeerConnection
 let currentPartner = null;
 let roomId = null;
+// Prevent multiple tabs
+if (localStorage.getItem("app-opened") === "true") {
+  alert("This app is already open in another tab.");
+  // Try to close new tab (may not work in all browsers)
+  window.close();
+  // Fallback: redirect to a safe page
+  window.location.href = "about:blank";
+}
+
+// Mark this tab as opened
+localStorage.setItem("app-opened", "true");
+
+// When tab closes or reloads, remove the flag
+window.addEventListener("beforeunload", () => {
+  localStorage.removeItem("app-opened");
+});
 
 // Basic STUN servers. For production add a TURN server.
 const pcConfig = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
+
 
 async function startLocal() {
   if (!localStream) {
@@ -79,6 +100,9 @@ chatMsg.addEventListener("keypress", (e) => {
 });
 
 
+socket.on("online-count", (count) => {
+  onlineCount.textContent = "People Online: " + count;
+});
 
 socket.on("chat-message", ({ msg }) => {
   appendChat(msg, false); // partner message
@@ -201,8 +225,44 @@ leaveBtn.addEventListener("click", () => {
   // simply disconnect socket to leave
   socket.disconnect();
   setStatus("Left. Refresh to reconnect.");
-  startBtn.disabled = true;
+  startBtn.disabled = false;
   skipBtn.disabled = true;
   leaveBtn.disabled = true;
+  togglecam()
+  
+});
+
+let camHidden = false;
+
+toggleCamBtn.addEventListener("click", () => {
+  if (!localStream) return;
+
+  const videoTrack = localStream.getVideoTracks()[0];
+
+  if (!videoTrack) return;
+
+  // Toggle enabled state
+  camHidden = !camHidden;
+  videoTrack.enabled = !camHidden;
+
+  // Update button text
+  toggleCamBtn.textContent = camHidden ? "Show Cam" : "Hide Cam";
+
+  // Optional: visually hide your preview
+  localVideo.style.opacity = camHidden ? "0.15" : "1.0";
+});
+
+let micMuted = false;
+
+toggleMicBtn.addEventListener("click", () => {
+  if (!localStream) return;
+
+  const audioTrack = localStream.getAudioTracks()[0];
+  if (!audioTrack) return;
+
+  micMuted = !micMuted;
+  audioTrack.enabled = !micMuted;
+
+  toggleMicBtn.textContent = micMuted ? "Unmute" : "Mute";
 });
 

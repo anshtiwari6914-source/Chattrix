@@ -31,6 +31,13 @@ function unpairSocket(socketId) {
 }
 
 io.on("connection", (socket) => {
+  // Send updated online count
+  io.emit("online-count", io.engine.clientsCount);
+
+  socket.on("disconnect", () => {
+    console.log("disconnect:", socket.id);
+    io.emit("online-count", io.engine.clientsCount);
+  });
   console.log(`connect: ${socket.id}`);
 
   socket.on("join-queue", () => {

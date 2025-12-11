@@ -11,6 +11,7 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
+const lockScreen = document.getElementById("lockScreen");
 
 let mode = "login"; // login or signup
 
@@ -55,10 +56,11 @@ function signup(email, password) {
         .then(() => {
             document.getElementById("msg").style.color = "green";
             document.getElementById("msg").innerText = "Account created successfully!";
-            
+           // window.location.href = "http://localhost:3000";
         })
         .catch(err => {
             document.getElementById("msg").innerText = err.message;
+            window.location.href = "http://localhost:3000";
         });
 }
 
@@ -68,8 +70,10 @@ function login(email, password) {
             document.getElementById("msg").style.color = "green";
             document.getElementById("msg").innerText = "Login successful!";   
             window.location.href = "http://localhost:3000";
+            
         })
         .catch(err => {
             document.getElementById("msg").innerText = err.message;
+
         });
 }

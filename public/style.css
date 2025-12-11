@@ -1,5 +1,4 @@
-/* public/style.css */
-body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:#f7f7fb; color:#111; margin:0; padding:20px; display:flex; justify-content:center; }
+body { display: none; font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:#f7f7fb; color:#111; margin:0; padding:20px; display:flex; justify-content:center; }
 .app { max-width:900px; width:100%; }
 h1 { margin:0 0 10px 0; }
 .videos { display:flex; gap:12px; margin-top:12px; }
@@ -19,6 +18,10 @@ button:disabled { opacity:0.5; cursor:not-allowed; }
   display: flex;
   flex-direction: column;
   box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+#leaveBtn{
+    opacity: 0;
 }
 
 #chatWindow {
@@ -52,3 +55,4 @@ button:disabled { opacity:0.5; cursor:not-allowed; }
   display: flex;
   flex-direction: column;
 }
+
