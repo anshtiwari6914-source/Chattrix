@@ -1,0 +1,50 @@
+<!-- public/index.html -->
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Pair Video - Demo</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <h1>Pair Video Call</h1>
+    <div id="status">Connecting...</div>
+
+    <div class="videos">
+      <div>
+        <h3>You</h3>
+        <video id="localVideo" autoplay playsinline muted></video>
+      </div>
+      <div>
+        <h3>Partner</h3>
+        <video id="remoteVideo" autoplay playsinline></video>
+      </div>
+    </div>
+
+    <div class="chat-container">
+  <div id="chatWindow"></div>
+
+  <div class="chat-input">
+    <input id="chatMsg" type="text" placeholder="Type a message…" />
+    <button id="sendBtn">Send</button>
+  </div>
+</div>
+
+
+    <div class="controls">
+      <button id="startBtn">Start / Join</button>
+      <button id="skipBtn" disabled>Skip</button>
+      <button id="leaveBtn" disabled>Leave</button>
+    </div>
+
+    <div class="notes">
+      <p>Open this page in two different browser windows (or share the URL). Use "Skip" to find a new partner.</p>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="client.js"></script>
+</body>
+</html>
