@@ -16,7 +16,7 @@ let mode = "login"; // login or signup
 
 function toggleMode() {
     const title = document.getElementById("title");
-    const btn = document.getElementById("actionBtn");
+    const btn = document.getElementById("login-btn");
     const switcher = document.querySelector(".switch");
 
     if (mode === "login") {
@@ -32,8 +32,8 @@ function toggleMode() {
     }
 }
 
-document.getElementById("actionBtn").addEventListener("click", () => {
-    const email = document.getElementById("email").value.trim();
+document.getElementById("login-btn").addEventListener("click", () => {
+    const email = document.getElementById("Email").value.trim();
     const password = document.getElementById("password").value;
 
     // ------------ Email must end with ac.in ------------
