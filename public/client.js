@@ -19,6 +19,24 @@ let pc; // RTCPeerConnection
 let currentPartner = null;
 let roomId = null;
 
+window.addEventListener("popstate", () => {
+    window.location.href = window.location.href;
+});
+
+// Prevent multiple tabs
+// Mark this tab as opened
+localStorage.setItem("app-opened", "true");
+
+// When tab closes or reloads, remove the flag
+window.addEventListener("beforeunload", () => {
+  localStorage.removeItem("app-opened");
+});
+
+function preventBack(){window.history.forward();}
+setTimeout("preventBack()",0);
+window.onload = function(){null}
+
+
 // Basic STUN servers. For production add a TURN server.
 const pcConfig = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
 

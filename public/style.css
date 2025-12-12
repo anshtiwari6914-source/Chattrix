@@ -7,21 +7,26 @@
 
 .title{
   color: #ffaa33;
+  margin-top: 20px;
 }
 
 .video-box {
-  width: 300px;
-  height: 320px;        /* ← SAME HEIGHT FOR BOTH */
+  
+  width: 330px;
+  height: 320px;       /* ← SAME HEIGHT FOR BOTH */
   background: #000;
   border-radius: 8px;
   object-fit: cover;    /* Crop nicely */
+  margin-left: 10px;
 }
 
 .video-label{
-  display: inline;
+  display: flex;
   height: 100;
   width: 100;
-  margin-left: 120px;
+  margin-left: 130px;
+  margin-top: 50px;
+  margin-bottom: 10px;
 }
 
 
@@ -281,4 +286,16 @@ body {
     color: black;
     font-weight: bold;
     cursor: pointer;
+}
+
+
+
+#Disclaimer{
+    font-size: 18px;
+    font-weight: bold;
+    color: #f4f4f4;
+    margin-top: 62px;
+    display: flex;
+    justify-content: space-evenly;
+    
 }
