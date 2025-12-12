@@ -62,7 +62,7 @@ function signup(email, password) {
         })
         .catch(err => {
             document.getElementById("msg").innerText = err.message;
-            window.location.href = "http://localhost:3000";
+            window.location.href = "https://server-production-5f21.up.railway.app/";
         });
 }
 
@@ -72,7 +72,7 @@ function login(email, password) {
             document.getElementById("msg").style.color = "green";
             document.getElementById("msg").innerText = "Login successful!";   
             //window.location.href = "http://localhost:3000";
-            window.open("http://localhost:3000", '_blank'); // open new tab
+            window.open("https://server-production-5f21.up.railway.app/", '_blank'); // open new tab
             window.location.href = 'about:blank'; // replace current tab content
         })
         .catch(err => {
