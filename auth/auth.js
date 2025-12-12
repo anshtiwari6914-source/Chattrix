@@ -8,23 +8,6 @@ const firebaseConfig = {
   measurementId: "G-WHTCTFD1JN"
 };
 
-// Prevent multiple tabs
-if (localStorage.getItem("app-opened") === "true") {
-  alert("This app is already open in another tab.");
-  // Try to close new tab (may not work in all browsers)
-  window.close();
-  // Fallback: redirect to a safe page
-  window.location.href = "about:blank";
-}
-
-// Mark this tab as opened
-localStorage.setItem("app-opened", "true");
-
-// When tab closes or reloads, remove the flag
-window.addEventListener("beforeunload", () => {
-  localStorage.removeItem("app-opened");
-});
-
 
 // ------------------------------------------------------------
 
@@ -88,8 +71,9 @@ function login(email, password) {
         .then(() => {
             document.getElementById("msg").style.color = "green";
             document.getElementById("msg").innerText = "Login successful!";   
-            window.location.href = "http://localhost:3000";
-            
+            //window.location.href = "http://localhost:3000";
+            window.open("http://localhost:3000", '_blank'); // open new tab
+            window.location.href = 'about:blank'; // replace current tab content
         })
         .catch(err => {
             document.getElementById("msg").innerText = err.message;

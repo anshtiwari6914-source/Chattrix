@@ -19,11 +19,18 @@ let pc; // RTCPeerConnection
 let currentPartner = null;
 let roomId = null;
 
-window.addEventListener("popstate", () => {
-    window.location.href = window.location.href;
-});
+history.pushState(null, null, location.href);
+window.onpopstate = () => history.go(1);
 
 // Prevent multiple tabs
+if (localStorage.getItem("app-opened") === "true") {
+  alert("This app is already open in another tab.");
+  // Try to close new tab (may not work in all browsers)
+  window.close();
+  // Fallback: redirect to a safe page
+  window.location.href = "about:blank";
+}
+
 // Mark this tab as opened
 localStorage.setItem("app-opened", "true");
 
@@ -31,11 +38,6 @@ localStorage.setItem("app-opened", "true");
 window.addEventListener("beforeunload", () => {
   localStorage.removeItem("app-opened");
 });
-
-function preventBack(){window.history.forward();}
-setTimeout("preventBack()",0);
-window.onload = function(){null}
-
 
 // Basic STUN servers. For production add a TURN server.
 const pcConfig = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
