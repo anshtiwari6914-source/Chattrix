@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<div id="lockScreen">
+<head>
+<meta charset="UTF-8">
+<title>Chattrix/login-page</title>
+<link rel="stylesheet" href="/auth/auth.css">
+
+</head>
+<body>
+
+    <!-- NAVBAR -->
+<nav class="navbar">
+    <div class="nav-left">
+        <div class="logo">C</div>
+        <span class="brand">Chattrix</span>
+    </div>
+
+    <div class="nav-right">
+        <a >Home</a>
+        <a >About</a>
+        <a >Safety</a>
+        <a >Help</a>
+    </div>
+    
+</nav>
+
+    <!-- LOGIN SECTION -->
+    <section class="login-container">
+        
+        <div class="login-header">
+            <div class="login-logo">C</div>
+            <h1>Chattrix</h1>
+            <p>Secure Access Portal</p>
+        </div>
+
+        <div class="login-box">
+            <h2 id="title">Login</h2>
+            <input id="Email" type="email" placeholder="Enter Student Email" class="login-input">
+            <input id="password" type="password" placeholder="Password" class="login-input">
+            <button id="login-btn" class="login-btn">LOG IN</button>
+            <p class ="switch" onclick="toggleMode()">Don't have an account? Create One</p>
+            <p id="msg" style="color: red; text-align: center;"></p>
+        </div>
+
+        <footer class="login-footer">
+            © 2023 Chattrix Inc. All rights reserved.  
+            <a href="#">Privacy Policy</a> |
+            <a href="#">Terms of Service</a>
+        </footer>
+
+    </section>
+
+    <!-- Firebase SDK -->
+    
+    <script>
+(function () {
+  const TAB_KEY = "chattrix_active_tab";
+
+  // if another tab already exists → block
+  if (localStorage.getItem(TAB_KEY)) {
+    document.documentElement.innerHTML = `
+      <body style="
+        background:black;
+        color:white;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        height:100vh;
+        font-family:sans-serif;
+        text-align:center">
+        This app is already open in another tab.
+      </body>`;
+    throw new Error("Multiple tabs blocked");
+  }
+
+  // mark this tab as active
+  localStorage.setItem(TAB_KEY, Date.now());
+
+  // remove lock when tab is closed
+  window.addEventListener("beforeunload", () => {
+    localStorage.removeItem(TAB_KEY);
+  });
+})();
+</script>
+
+
+<script>
+(function () {
+  const isTouch = navigator.maxTouchPoints > 0;
+  const smallScreen = Math.min(screen.width, screen.height) < 900;
+  const portrait = screen.height > screen.width;
+  const noWebRTC = !navigator.mediaDevices;
+
+  if ((isTouch && smallScreen) || portrait || noWebRTC) {
+    document.documentElement.innerHTML = `
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body style="
+        margin: 0;
+        background: black;
+        color: white;
+        display: flex;
+        flex-direction: column; /* Set flex direction to column to stack items */
+        align-items: center;
+        justify-content: center;
+        font-family: 'Poppins', sans-serif;
+        text-align: center;
+        min-height: 100vh; /* Ensure body takes full screen height */
+        padding: 20px;
+    ">
+        
+        <img 
+            src="mobile-desktop-only.png" 
+            alt="Mobile screen mockup showing 'Desktop Only. For now...' message."
+            style="
+                max-width: 90%; /* Responsive width */
+                width: 350px; /* Max size for the mockup */
+                height: auto;
+                margin-bottom: 20px;
+                border-radius: 20px; /* Optional: adds a slight curve to the corners */
+                box-shadow: 0 4px 60px rgba(255, 255, 255, 0.1); /* Optional: subtle glow effect */
+            "
+        >
+
+        <p style="
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-top: 10px;
+        ">
+            Stay tuned for the Android app!
+        </p>
+
+    </body>
+`;
+    throw new Error("Blocked on mobile");
+  }
+})();
+</script>
+
+
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+
+<script src="/auth/auth.js"></script>
+
+
+
+</body>
+
+</div>
+</html>
