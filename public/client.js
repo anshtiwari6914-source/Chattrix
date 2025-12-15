@@ -73,6 +73,7 @@ const pcConfig = {
 };
 
 
+
 function setStatus(s) {
   if (statusEl) statusEl.textContent = s;
 }
@@ -96,31 +97,36 @@ async function startLocal() {
 function createPeerConnection() {
   pc = new RTCPeerConnection(pcConfig);
 
+  console.log("🧠 PeerConnection created");
+
   if (localStream) {
-    localStream.getTracks().forEach((t) => pc.addTrack(t, localStream));
+    localStream.getTracks().forEach((t) => {
+      pc.addTrack(t, localStream);
+      console.log("➕ Track added:", t.kind);
+    });
   }
 
   pc.ontrack = (ev) => {
-    // attach first stream
-    if (remoteVideo) remoteVideo.srcObject = ev.streams[0];
+    console.log("🎥 Remote track received");
+    remoteVideo.srcObject = ev.streams[0];
   };
 
   pc.onicecandidate = (ev) => {
     if (ev.candidate) {
+      console.log("🧊 ICE candidate generated");
       socket.emit("signal", { type: "ice", candidate: ev.candidate });
     }
   };
 
+  pc.oniceconnectionstatechange = () => {
+    console.log("🧊 ICE state:", pc.iceConnectionState);
+  };
+
   pc.onconnectionstatechange = () => {
-    console.log("PC state:", pc.connectionState);
-    // helpful debug info
-    // console.log("pc connectionState:", pc.connectionState);
-    if (pc.connectionState === "disconnected" || pc.connectionState === "failed") {
-      setStatus("Peer disconnected.");
-      if (remoteVideo) remoteVideo.srcObject = null;
-    }
+    console.log("🔗 PC state:", pc.connectionState);
   };
 }
+
 
 function cleanupPeer() {
   if (pc) {
@@ -245,8 +251,12 @@ socket.on("signal", async ({ from, data }) => {
   } else if (data.type === "ice") {
   if (pc.remoteDescription) {
     await pc.addIceCandidate(data.candidate);
+    console.log("🧊 ICE candidate added");
+  } else {
+    console.log("⚠️ ICE skipped (no remote description yet)");
   }
 }
+
 
 });
 
