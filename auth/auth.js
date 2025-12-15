@@ -13,31 +13,6 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const lockScreen = document.getElementById("lockScreen");
 
-// // app root & warning element
-// const appRoot = document.querySelector(".main-wrapper");
-// const warning = document.getElementById("screenWarning");
-
-// function checkAppView() {
-//   const MIN_HEIGHT = 650; // minimum height for good UX
-//   const isFullscreen = window.innerHeight === screen.height && window.innerWidth === screen.width;
-
-//   if (window.innerHeight < MIN_HEIGHT || !isFullscreen) {
-//     // Add blur and show warning
-//     appRoot.classList.add("app-blur");
-//     warning.classList.add("active");
-//   } else {
-//     // Remove blur and hide warning
-//     appRoot.classList.remove("app-blur");
-//     warning.classList.remove("active");
-//   }
-// }
-
-// // Run on resize
-// window.addEventListener("resize", checkAppView);
-
-// // Run on load
-// checkAppView();
-
 
 let mode = "login"; // login or signup
 

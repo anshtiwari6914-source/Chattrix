@@ -88,9 +88,34 @@
   </div>
 
 
-  
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="/client.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/client.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDzs75cgOPRzG2q_6_ofCIJ-lTKcSB3YK4",
+  authDomain: "chattrix-e70e2.firebaseapp.com",
+  projectId: "chattrix-e70e2",
+  storageBucket: "chattrix-e70e2.firebasestorage.app",
+  messagingSenderId: "381880163728",
+  appId: "1:381880163728:web:cf07f5fdf20e7b3edfa715",
+  measurementId: "G-WHTCTFD1JN"
+  };
+  firebase.initializeApp(firebaseConfig);
+</script>
+
+<script>
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    firebase.auth().signOut().then(() => {
+      window.location.href = "/";
+    });
+  }
+});
+</script>
 
 
 </body>

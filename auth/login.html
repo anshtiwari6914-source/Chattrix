@@ -52,37 +52,6 @@
     </section>
 
     <!-- Firebase SDK -->
-    
-    <script>
-(function () {
-  const TAB_KEY = "chattrix_active_tab";
-
-  // if another tab already exists → block
-  if (localStorage.getItem(TAB_KEY)) {
-    document.documentElement.innerHTML = `
-      <body style="
-        background:black;
-        color:white;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        height:100vh;
-        font-family:sans-serif;
-        text-align:center">
-        This app is already open in another tab.
-      </body>`;
-    throw new Error("Multiple tabs blocked");
-  }
-
-  // mark this tab as active
-  localStorage.setItem(TAB_KEY, Date.now());
-
-  // remove lock when tab is closed
-  window.addEventListener("beforeunload", () => {
-    localStorage.removeItem(TAB_KEY);
-  });
-})();
-</script>
 
 <script>
 (function () {
