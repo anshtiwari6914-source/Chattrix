@@ -56,7 +56,22 @@ window.onpopstate = () => history.go(1);
 // });
 
 // Basic STUN servers. For production add a TURN server.
-const pcConfig = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
+const pcConfig = {
+  iceServers: [
+    { urls: "stun:stun.l.google.com:19302" },
+    {
+      urls: "turn:openrelay.metered.ca:80",
+      username: "openrelayproject",
+      credential: "openrelayproject"
+    },
+    {
+      urls: "turn:openrelay.metered.ca:443",
+      username: "openrelayproject",
+      credential: "openrelayproject"
+    }
+  ]
+};
+
 
 function setStatus(s) {
   if (statusEl) statusEl.textContent = s;
@@ -97,6 +112,7 @@ function createPeerConnection() {
   };
 
   pc.onconnectionstatechange = () => {
+    console.log("PC state:", pc.connectionState);
     // helpful debug info
     // console.log("pc connectionState:", pc.connectionState);
     if (pc.connectionState === "disconnected" || pc.connectionState === "failed") {
@@ -227,12 +243,11 @@ socket.on("signal", async ({ from, data }) => {
   } else if (data.type === "answer") {
     await pc.setRemoteDescription(data.sdp);
   } else if (data.type === "ice") {
-    try {
-      await pc.addIceCandidate(data.candidate);
-    } catch (e) {
-      console.warn("Failed to add ICE candidate", e);
-    }
+  if (pc.remoteDescription) {
+    await pc.addIceCandidate(data.candidate);
   }
+}
+
 });
 
 socket.on("chat-message", ({ msg }) => {
