@@ -21,7 +21,7 @@ let activeSessions = new Set();
 // ---------------- LOGIN PAGES ----------------
 app.use("/auth", express.static(path.join(__dirname, "auth")));
 
-app.get("https://chattrix-yapd.onrender.com", (req, res) => {
+app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "auth", "login.html"));
 });
 
@@ -59,7 +59,7 @@ function requireLogin(req, res, next) {
 // ---------------- PROTECTED APP ----------------
 app.use(express.static(path.join(__dirname, "public")));
 
-app.get("https://chattrix-yapd.onrender.com/app", requireLogin, (req, res) => {
+app.get("/app", requireLogin, (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
