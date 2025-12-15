@@ -85,43 +85,91 @@
 </script>
 
 
-<script>
-(function () {
-  const isTouch = navigator.maxTouchPoints > 0;
-  const smallScreen = Math.min(screen.width, screen.height) < 900;
-  const portrait = screen.height > screen.width;
-  const noWebRTC = !navigator.mediaDevices;
+    <script>
+  document.documentElement.style.background = "#000";
 
-  if ((isTouch && smallScreen) || portrait || noWebRTC) {
-    document.head.innerHTML = `
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Desktop Only</title>
-    `;
-
-    document.body.innerHTML = `
-      <div style="
+  document.head.innerHTML += `
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desktop Only</title>
+    <style>
+      * {
         margin: 0;
-        background: black;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", system-ui, sans-serif;
+      }
+      body {
+        background: #000;
+        color: #fff;
+        height: 100vh;
+        overflow: hidden;
+      }
+      .container {
+        height: 100%;
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
-        font-family: Poppins, sans-serif;
-        text-align: center;
-        min-height: 100vh;
         padding: 20px;
-      ">
-        <p style="font-size:1.2rem;opacity:0.8;">
-          Desktop Only. Mobile app coming soon 🚀
+      }
+      .card {
+        width: 100%;
+        max-width: 360px;
+        background: rgba(255,255,255,0.04);
+        border-radius: 20px;
+        padding: 30px 25px;
+        text-align: center;
+        backdrop-filter: blur(14px);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+      }
+      .icon {
+        font-size: 3rem;
+        margin-bottom: 15px;
+      }
+      h1 {
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+      .subtitle {
+        font-size: 1rem;
+        opacity: 0.75;
+        margin-bottom: 12px;
+      }
+      .genz {
+        font-size: 1rem;
+        opacity: 0.9;
+      }
+      .divider {
+        height: 1px;
+        background: rgba(255,255,255,0.12);
+        margin: 20px 0;
+      }
+      .soon {
+        font-size: 0.9rem;
+        opacity: 0.6;
+      }
+    </style>
+  `;
+
+  document.body.innerHTML = `
+    <div class="container">
+      <div class="card">
+        <div class="icon">💻</div>
+        <h1>Desktop only.</h1>
+        <p class="subtitle">
+          This app works best on desktop right now.
+        </p>
+        <p class="genz">
+          This hits different on desktop 👀
+        </p>
+        <div class="divider"></div>
+        <p class="soon">
+          Mobile app coming soon 🚀
         </p>
       </div>
-    `;
-
-    return; // ✅ stop script safely
-  }
-})();
-</script>
+    </div>
+  `;
+    </script>
 
 
 
