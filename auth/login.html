@@ -84,9 +84,15 @@
 })();
 </script>
 
+<script>
+(function () {
+  const isTouch = navigator.maxTouchPoints > 0;
+  const smallScreen = Math.min(screen.width, screen.height) < 900;
+  const portrait = screen.height > screen.width;
+  const noWebRTC = !navigator.mediaDevices;
 
-    <script>
-  document.documentElement.style.background = "#000";
+  if ((isTouch && smallScreen) || portrait || noWebRTC) {
+    document.documentElement.style.background = "#000";
 
   document.head.innerHTML += `
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -169,7 +175,10 @@
       </div>
     </div>
   `;
-    </script>
+    return; // ✅ stop script safely
+  }
+})();
+</script>
 
 
 
