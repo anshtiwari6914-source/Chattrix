@@ -85,7 +85,6 @@
 </script>
 
 
-
 <script>
 (function () {
   const isTouch = navigator.maxTouchPoints > 0;
@@ -94,51 +93,46 @@
   const noWebRTC = !navigator.mediaDevices;
 
   if ((isTouch && smallScreen) || portrait || noWebRTC) {
-    document.documentElement.innerHTML = `
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body style="
-        margin: 0;
-        background: black;
-        color: white;
-        display: flex;
-        flex-direction: column; /* Set flex direction to column to stack items */
-        align-items: center;
-        justify-content: center;
-        font-family: 'Poppins', sans-serif;
-        text-align: center;
-        min-height: 100vh; /* Ensure body takes full screen height */
-        padding: 20px;
-    ">
-        
+
+    // keep URL context intact
+    document.body.innerHTML = `
+      <div style="
+        margin:0;
+        background:black;
+        color:white;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        font-family:Poppins, sans-serif;
+        text-align:center;
+        min-height:100vh;
+        padding:20px;
+      ">
         <img 
-            src="./bg.png"
-            alt="Mobile screen mockup showing 'Desktop Only. For now...' message."
-            style="
-                max-width: 90%; /* Responsive width */
-                width: 350px; /* Max size for the mockup */
-                height: auto;
-                margin-bottom: 20px;
-                border-radius: 20px; /* Optional: adds a slight curve to the corners */
-                box-shadow: 0 4px 60px rgba(255, 255, 255, 0.1); /* Optional: subtle glow effect */
-            "
+          src="./bg.png"
+          alt="Desktop Only"
+          style="
+            max-width:90%;
+            width:350px;
+            height:auto;
+            margin-bottom:20px;
+            border-radius:20px;
+            box-shadow:0 4px 60px rgba(255,255,255,0.1);
+          "
         >
-
-        <p style="
-            font-size: 1.2rem;
-            opacity: 0.8;
-            margin-top: 10px;
-        ">
-            Stay tuned for the Android app!
+        <p style="font-size:1.2rem;opacity:0.8;">
+          Stay tuned for the Android app!
         </p>
+      </div>
+    `;
 
-    </body>
-`;
-    throw new Error("Blocked on mobile");
+    return; // stop execution safely
   }
 })();
 </script>
+
+
 
 
 
