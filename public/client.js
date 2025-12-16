@@ -21,6 +21,7 @@ setInterval(() => {
 
 
 
+let pendingCandidates = [];
 
 let localStream;
 let pc; // RTCPeerConnection
@@ -57,18 +58,30 @@ window.onpopstate = () => history.go(1);
 
 // Basic STUN servers. For production add a TURN server.
 const pcConfig = {
-  iceServers: [
-    { urls: "stun:stun.l.google.com:19302" },
-    {
-      urls: "turn:openrelay.metered.ca:80",
-      username: "openrelayproject",
-      credential: "openrelayproject"
-    },
-    {
-      urls: "turn:openrelay.metered.ca:443",
-      username: "openrelayproject",
-      credential: "openrelayproject"
-    }
+  iceServers:[
+      {
+        urls: "stun:stun.relay.metered.ca:80",
+      },
+      {
+        urls: "turn:global.relay.metered.ca:80",
+        username: "50a7373e20e54e0d3c797769",
+        credential: "NrHG6iOFdYzgBI9j",
+      },
+      {
+        urls: "turn:global.relay.metered.ca:80?transport=tcp",
+        username: "50a7373e20e54e0d3c797769",
+        credential: "NrHG6iOFdYzgBI9j",
+      },
+      {
+        urls: "turn:global.relay.metered.ca:443",
+        username: "50a7373e20e54e0d3c797769",
+        credential: "NrHG6iOFdYzgBI9j",
+      },
+      {
+        urls: "turns:global.relay.metered.ca:443?transport=tcp",
+        username: "50a7373e20e54e0d3c797769",
+        credential: "NrHG6iOFdYzgBI9j",
+      },
   ]
 };
 
@@ -95,7 +108,11 @@ async function startLocal() {
 }
 
 function createPeerConnection() {
-  pc = new RTCPeerConnection(pcConfig);
+  pc = new RTCPeerConnection({
+  iceServers: pcConfig.iceServers,
+  iceTransportPolicy: "relay"
+});
+
 
   console.log("🧠 PeerConnection created");
 
@@ -242,23 +259,41 @@ socket.on("signal", async ({ from, data }) => {
   }
 
   if (data.type === "offer") {
+    // ✅ set remote offer
     await pc.setRemoteDescription(data.sdp);
+
+    // ✅ add any ICE that arrived early
+    for (const c of pendingCandidates) {
+      await pc.addIceCandidate(c);
+    }
+    pendingCandidates = [];
+
+    // ✅ create & send answer
     const answer = await pc.createAnswer();
     await pc.setLocalDescription(answer);
     socket.emit("signal", { type: "answer", sdp: answer });
+
   } else if (data.type === "answer") {
+    // ✅ set remote answer
     await pc.setRemoteDescription(data.sdp);
+
+    // ✅ add any ICE that arrived early
+    for (const c of pendingCandidates) {
+      await pc.addIceCandidate(c);
+    }
+    pendingCandidates = [];
+
   } else if (data.type === "ice") {
-  if (pc.remoteDescription) {
-    await pc.addIceCandidate(data.candidate);
-    console.log("🧊 ICE candidate added");
-  } else {
-    console.log("⚠️ ICE skipped (no remote description yet)");
+    // ✅ ICE may arrive before SDP
+    if (pc.remoteDescription) {
+      await pc.addIceCandidate(data.candidate);
+    } else {
+      pendingCandidates.push(data.candidate);
+    }
   }
-}
-
-
 });
+
+
 
 socket.on("chat-message", ({ msg }) => {
   appendChat(msg, false);
