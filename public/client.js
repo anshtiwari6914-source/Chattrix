@@ -28,6 +28,17 @@ let pc; // RTCPeerConnection
 let currentPartner = null;
 let roomId = null;
 
+
+document.addEventListener("visibilitychange", () => {
+  if (!localStream) return;
+
+  const videoTrack = localStream.getVideoTracks()[0];
+  if (!videoTrack) return;
+
+  videoTrack.enabled = !document.hidden;
+});
+
+
 const systemMessage = document.getElementById("systemMessage");
 
 function showMessage(msg) {
@@ -58,32 +69,18 @@ window.onpopstate = () => history.go(1);
 
 // Basic STUN servers. For production add a TURN server.
 const pcConfig = {
-  iceServers:[
-      {
-        urls: "stun:stun.relay.metered.ca:80",
-      },
-      {
-        urls: "turn:global.relay.metered.ca:80",
-        username: "50a7373e20e54e0d3c797769",
-        credential: "NrHG6iOFdYzgBI9j",
-      },
-      {
-        urls: "turn:global.relay.metered.ca:80?transport=tcp",
-        username: "50a7373e20e54e0d3c797769",
-        credential: "NrHG6iOFdYzgBI9j",
-      },
-      {
-        urls: "turn:global.relay.metered.ca:443",
-        username: "50a7373e20e54e0d3c797769",
-        credential: "NrHG6iOFdYzgBI9j",
-      },
-      {
-        urls: "turns:global.relay.metered.ca:443?transport=tcp",
-        username: "50a7373e20e54e0d3c797769",
-        credential: "NrHG6iOFdYzgBI9j",
-      },
+  iceServers: [
+    {
+      urls: [
+        "turn:global.relay.metered.ca:443?transport=udp",
+        "turn:global.relay.metered.ca:443?transport=tcp"
+      ],
+      username: "50a7373e20e54e0d3c797769",
+      credential: "NrHG6iOFdYzgBI9j"
+    }
   ]
 };
+
 
 
 
@@ -94,7 +91,19 @@ function setStatus(s) {
 async function startLocal() {
   if (!localStream) {
     try {
-      localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      localStream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          width: { ideal: 640 },
+          height: { ideal: 360 },
+          frameRate: { max: 20 }
+        },
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true
+        }
+      });
+
       if (localVideo) localVideo.srcObject = localStream;
       startBtn.style.display = "none";
       skipBtn.style.display = "inline";
@@ -113,6 +122,11 @@ function createPeerConnection() {
   iceTransportPolicy: "relay"
 });
 
+pc.addTransceiver("video", {
+  direction: "sendrecv",
+  sendEncodings: [{ maxBitrate: 400_000 }]
+});
+
 
   console.log("🧠 PeerConnection created");
 
@@ -121,6 +135,18 @@ function createPeerConnection() {
       pc.addTrack(t, localStream);
       console.log("➕ Track added:", t.kind);
     });
+  }
+
+  // 🔥 ADD THIS BLOCK RIGHT HERE
+  const sender = pc.getSenders().find(s => s.track?.kind === "video");
+  if (sender) {
+    const params = sender.getParameters();
+    if (!params.encodings) params.encodings = [{}];
+
+    params.encodings[0].maxBitrate = 400_000; // 400 kbps
+    params.encodings[0].maxFramerate = 20;
+
+    sender.setParameters(params);
   }
 
   pc.ontrack = (ev) => {
